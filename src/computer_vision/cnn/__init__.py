@@ -1,0 +1,1 @@
+from .fashion_mnist_classifier import FashionMNISTClassifier
