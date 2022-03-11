@@ -13,3 +13,18 @@ into a separate environment called `machine-learning`.
 ```bash
 conda create --name machine-learning --file requirements.txt
 ```
+
+## Tests
+Run the entire test suite with `pytest`.
+
+
+
+## Contribution
+1. Create a new feature branch that compares to the main branch and open a PR.
+1. Ensure you have written appropriate tests and run `pytest`
+
+Update the `requirements.txt` file using the following command from the 
+main directory:
+```bash
+conda list -e > requirements.txt
+```
