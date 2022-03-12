@@ -9,6 +9,7 @@ import numpy as np
 # Support packages
 import pickle
 
+
 class FashionMNISTClassifier:
     def __init__(self, model_path, train_history_path):
         self.model_path = model_path
