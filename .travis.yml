@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.9"
+install:
+  - pip install pipenv
+  - pipenv install
+
+script:
+  # Your test script goes here
+  - pytest -v --color=yes src # Runs in pipenv

@@ -17,7 +17,7 @@ def main():
     file_name = 'extra_python_folders.pth'
     with open(os.path.join(site_packages_dir, file_name), 'w') as f:
         f.write(src_path)
-        print("Added to conda path: " + src_path)
+        print("Added to path: " + src_path)
 
 if __name__ == "__main__":
     main()
