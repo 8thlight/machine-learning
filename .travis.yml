@@ -7,4 +7,4 @@ install:
 
 script:
   # Your test script goes here
-  - pytest -v --color=yes --cov=cpr tests # Runs in pipenv
+  - pytest -v --color=yes src # Runs in pipenv
