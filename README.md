@@ -22,9 +22,9 @@ make install
 ```
 This calls `pipenv`, which will create a virtual environment for this project.
 
-To enter a shell on this environment run
+To activate this environment run
 ```bash
-make shell
+make activate
 ```
 
 ## Tests
@@ -44,11 +44,11 @@ make lint
 
 We use `autopep8` to automatically fix errors.
 
-User
+Use
 ```bash
 make lintfix
 ```
-of
+or
 ```bash
 make lintfixhard
 ```

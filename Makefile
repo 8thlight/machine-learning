@@ -1,17 +1,20 @@
+activate:
+	pipenv shell
+
 test: 
 	pytest
 
 lint:
-	pylint src
+	pylint **/*.py
 
 lintfix:
-	autopep8 src --recursive --in-place --aggressive
+	autopep8 **/*.py --recursive --in-place --aggressive
 
 lintfixhard:
-	autopep8 src --recursive --in-place --aggressive --aggressive
+	autopep8 **/*.py --recursive --in-place --aggressive --aggressive
 
 install:
-	pipenv install
+	pipenv install --dev
 
 lock:
 	pipenv lock
