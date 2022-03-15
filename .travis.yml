@@ -1,6 +1,9 @@
 language: python
 python:
   - "3.9"
+before_install:
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+
 install:
   - pip install pipenv
   - pipenv install --dev
