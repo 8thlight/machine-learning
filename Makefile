@@ -14,7 +14,7 @@ lintfixhard:
 	autopep8 **/*.py --recursive --in-place --aggressive --aggressive
 
 install:
-	pipenv install
+	pipenv install --dev
 
 lock:
 	pipenv lock
