@@ -1,13 +1,19 @@
+"""Test file for the FashionMNIST Classifier"""
 import tensorflow
-import tensorflow.compat.v1 as tf
 
 from .fashion_mnist_classifier import FashionMNISTClassifier
 
+# Make tests deterministic
 tensorflow.random.set_seed(123)
 
-
 def test_full_cycle():
-    classifier = FashionMNISTClassifier("./model.h5", "./hist")
+    """
+    Tests that the entire flow can be executed without interruptions or failures
+
+    To test this fast, the provided dataset is reduced to its first 300
+    samples, and trained only for 2 epochs.
+    """
+    classifier = FashionMNISTClassifier()
     classifier.build_model()
     classifier.load_dataset()
     classifier.train_data = (  # just use 300 data samples for unit testing

@@ -5,6 +5,15 @@ install:
   - pip install pipenv
   - pipenv install
 
-script:
-  # Your test script goes here
-  - pytest -v --color=yes src # Runs in pipenv
+stages:
+  - style
+  - test
+
+jobs:
+  include:
+    - stage: style
+      name: "Style check"
+      script: pylint ./*.py
+    - stage: test
+      name: "Unit tests"
+      script: pytest -v --color=yes src # Runs in pipenv
