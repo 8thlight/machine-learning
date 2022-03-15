@@ -5,13 +5,13 @@ test:
 	pytest
 
 lint:
-	pylint ./*.py
+	pylint **/*.py
 
 lintfix:
-	autopep8 ./*.py --recursive --in-place --aggressive
+	autopep8 **/*.py --recursive --in-place --aggressive
 
 lintfixhard:
-	autopep8 ./*.py --recursive --in-place --aggressive --aggressive
+	autopep8 **/*.py --recursive --in-place --aggressive --aggressive
 
 install:
 	pipenv install

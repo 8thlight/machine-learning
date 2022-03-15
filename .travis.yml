@@ -3,7 +3,7 @@ python:
   - "3.9"
 install:
   - pip install pipenv
-  - pipenv install
+  - pipenv install --dev
 
 stages:
   - style
@@ -13,7 +13,7 @@ jobs:
   include:
     - stage: style
       name: "Style check"
-      script: pylint ./*.py
+      script: pylint **/*.py
     - stage: test
       name: "Unit tests"
       script: pytest -v --color=yes src # Runs in pipenv
