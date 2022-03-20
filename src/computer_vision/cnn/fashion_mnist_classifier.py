@@ -10,6 +10,7 @@ from keras.datasets import fashion_mnist
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class FashionMNISTClassifier:
     """
     Can load a trained model from memory or

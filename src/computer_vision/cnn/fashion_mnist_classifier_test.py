@@ -6,6 +6,7 @@ from .fashion_mnist_classifier import FashionMNISTClassifier
 # Make tests deterministic
 tensorflow.random.set_seed(123)
 
+
 def test_full_cycle():
     """
     Tests that the entire flow can be executed without interruptions or failures
