@@ -7,6 +7,9 @@ test:
 lint:
 	pylint **/*.py
 
+lint-src:
+	pylint src/
+
 lintfix:
 	autopep8 **/*.py --recursive --in-place --aggressive
 
