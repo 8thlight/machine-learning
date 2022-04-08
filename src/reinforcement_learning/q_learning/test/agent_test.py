@@ -5,17 +5,21 @@ import numpy as np
 from game.snake import Direction, SnakeGame, Point
 from ..agent import ai_direction_to_snake, Agent
 
+
 def test_ai_direction_left():
     snake_direction = ai_direction_to_snake([1, 0, 0])
     assert snake_direction == "left"
+
 
 def test_ai_direction_right():
     snake_direction = ai_direction_to_snake([0, 1, 0])
     assert snake_direction == "right"
 
+
 def test_ai_direction_forward():
     snake_direction = ai_direction_to_snake([0, 0, 1])
     assert snake_direction == "forward"
+
 
 def test_ai_direction_correct_parameter():
     with pytest.raises(ValueError) as e_info:
@@ -23,17 +27,20 @@ def test_ai_direction_correct_parameter():
 
     assert str(e_info.value) == "Unknown action: [1, 1, 1]"
 
+
 def test_ai_direction_cannot_receive_tensor():
     with pytest.raises(ValueError) as e_info:
         ai_direction_to_snake(tf.constant([1, 0, 0]))
 
     assert str(e_info.value) == "Action must be a list"
 
+
 def test_ai_direction_cannot_receive_numpy_array():
     with pytest.raises(ValueError) as e_info:
         ai_direction_to_snake(np.array([1, 0, 0]))
 
     assert str(e_info.value) == "Action must be a list"
+
 
 def test_reward_correct_parameters():
     agent = Agent()
@@ -47,27 +54,31 @@ def test_reward_correct_parameters():
 
     assert str(e_info.value) == "Reward function only receives booleans"
 
+
 def test_reward_on_done():
     agent = Agent()
     reward = agent.reward(False, True)
     assert reward == -10
+
 
 def test_reward_on_eaten():
     agent = Agent()
     reward = agent.reward(True, False)
     assert reward == 10
 
+
 def test_reward_on_default():
     agent = Agent()
     reward = agent.reward(False, False)
     assert reward == 0
 
+
 def test_state_directions():
     agent = Agent()
     game = SnakeGame()
     indexes = [3, 4, 5, 6]
-    directions = [Direction.LEFT, Direction.RIGHT, 
-        Direction.UP, Direction.DOWN]
+    directions = [Direction.LEFT, Direction.RIGHT,
+                  Direction.UP, Direction.DOWN]
 
     for idx, direction in zip(indexes, directions):
         game.direction = direction
@@ -76,6 +87,7 @@ def test_state_directions():
         assert state[idx] == 1
         for other_idx in other_indexes:
             assert state[other_idx] == 0
+
 
 def test_state_food_locations():
     agent = Agent()
@@ -124,6 +136,7 @@ def test_state_food_locations():
     state = agent.get_state(game)
     assert (state[7:11] == [1, 0, 1, 0]).all()
 
+
 def test_state_danger_straight():
     agent = Agent()
     game = SnakeGame()
@@ -132,15 +145,16 @@ def test_state_danger_straight():
     y = game.head.y
 
     directions = [Direction.UP, Direction.RIGHT,
-        Direction.DOWN, Direction.LEFT]
-    tails = [Point(x, y-unit), Point(x+unit, y),
-        Point(x, y+unit), Point(x-unit, y)]
+                  Direction.DOWN, Direction.LEFT]
+    tails = [Point(x, y - unit), Point(x + unit, y),
+             Point(x, y + unit), Point(x - unit, y)]
 
     for direction, tail in zip(directions, tails):
         game.direction = direction
         game.snake = [game.head, tail]
         state = agent.get_state(game)
         assert (state[:3] == [1, 0, 0]).all()
+
 
 def test_state_danger_left():
     agent = Agent()
@@ -150,15 +164,16 @@ def test_state_danger_left():
     y = game.head.y
 
     directions = [Direction.UP, Direction.RIGHT,
-        Direction.DOWN, Direction.LEFT]
-    tails = [Point(x-unit, y), Point(x, y-unit), 
-        Point(x+unit, y), Point(x, y+unit)]
+                  Direction.DOWN, Direction.LEFT]
+    tails = [Point(x - unit, y), Point(x, y - unit),
+             Point(x + unit, y), Point(x, y + unit)]
 
     for direction, tail in zip(directions, tails):
         game.direction = direction
         game.snake = [game.head, tail]
         state = agent.get_state(game)
         assert (state[:3] == [0, 0, 1]).all()
+
 
 def test_state_danger_right():
     agent = Agent()
@@ -168,9 +183,9 @@ def test_state_danger_right():
     y = game.head.y
 
     directions = [Direction.UP, Direction.RIGHT,
-        Direction.DOWN, Direction.LEFT]
-    tails = [Point(x+unit, y), Point(x,y+unit),
-        Point(x-unit, y), Point(x, y-unit)]
+                  Direction.DOWN, Direction.LEFT]
+    tails = [Point(x + unit, y), Point(x, y + unit),
+             Point(x - unit, y), Point(x, y - unit)]
 
     for direction, tail in zip(directions, tails):
         game.direction = direction
@@ -178,13 +193,15 @@ def test_state_danger_right():
         state = agent.get_state(game)
         assert (state[:3] == [0, 1, 0]).all()
 
+
 def test_get_state_shape():
     agent = Agent()
     game = SnakeGame()
     state = agent.get_state(game)
 
-    assert type(state) == np.ndarray
+    assert isinstance(state, np.ndarray)
     assert state.shape == (11,)
+
 
 def test_get_action_shape():
     agent = Agent()
@@ -192,11 +209,12 @@ def test_get_action_shape():
     state = agent.get_state(game)
     action = agent.get_action(state)
 
-    assert type(action) == list
+    assert isinstance(action, list)
     assert len(action) == 3
     assert sum(action) == 1
     for elem in action:
-        assert type(elem) == int
+        assert isinstance(elem, int)
+
 
 def test_defaults():
     agent = Agent()

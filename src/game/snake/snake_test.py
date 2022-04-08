@@ -2,13 +2,14 @@ import pytest
 
 from .snake import SnakeGame, Direction, Point
 
+
 def test_direction_left():
     game = SnakeGame()
 
     starts = [Direction.UP, Direction.RIGHT, Direction.DOWN,
-        Direction.LEFT]
+              Direction.LEFT]
     expects = [Direction.LEFT, Direction.UP, Direction.RIGHT,
-        Direction.DOWN]
+               Direction.DOWN]
 
     for start, expect in zip(starts, expects):
         game.direction = start
@@ -16,13 +17,14 @@ def test_direction_left():
         chosen_direction = game._choose_direction("left")
         assert chosen_direction == expect
 
+
 def test_direction_right():
     game = SnakeGame()
 
     starts = [Direction.UP, Direction.RIGHT, Direction.DOWN,
-        Direction.LEFT]
+              Direction.LEFT]
     expects = [Direction.RIGHT, Direction.DOWN, Direction.LEFT,
-        Direction.UP]
+               Direction.UP]
 
     for start, expect in zip(starts, expects):
         game.direction = start
@@ -30,17 +32,19 @@ def test_direction_right():
         chosen_direction = game._choose_direction("right")
         assert chosen_direction == expect
 
+
 def test_direction_forward():
     game = SnakeGame()
 
     directions = [Direction.UP, Direction.RIGHT,
-        Direction.DOWN, Direction.LEFT]
+                  Direction.DOWN, Direction.LEFT]
 
     for direction in directions:
         game.direction = direction
         assert game.direction == direction
         chosen_direction = game._choose_direction("forward")
         assert chosen_direction == direction
+
 
 def test_direction_correct_value():
     game = SnakeGame()
