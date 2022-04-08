@@ -7,7 +7,7 @@
 .DEFAULT_GOAL := init
 
 # targets that do not create a file
-.PHONY: activate test lint lint-src lintfix lintfixhard install lock clean
+.PHONY: init activate test lint lint-src lintfix lintfixhard install lock clean
 
 PY_FILES := src/ cli/
 
@@ -27,6 +27,8 @@ lintfix:
 
 lintfix-hard:
 	autopep8 $(PY_FILES) --recursive --in-place --aggressive --aggressive
+
+pipfile: install
 
 install:
 	pipenv install --dev
