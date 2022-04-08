@@ -1,6 +1,7 @@
 # Usage:
 # make           # activate the virtual environment
 # make install   # install pipenv dependencies
+# make packages  # adds src/ files to be available as python modules
 
 # default target
 .DEFAULT_GOAL := activate
@@ -33,3 +34,6 @@ lock:
 
 clean:
 	pipenv clean
+
+packages:
+	python path_adder.py
