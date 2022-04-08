@@ -221,8 +221,11 @@ if __name__ == '__main__':
                     game.quit()
                     stop = True
 
-                if event.key in [pygame.K_LEFT, pygame.K_RIGHT,
-                                 pygame.K_UP, pygame.K_DOWN]:  # any other key keeps forward
+                if event.key in [
+                        pygame.K_LEFT,
+                        pygame.K_RIGHT,
+                        pygame.K_UP,
+                        pygame.K_DOWN]:  # any other key keeps forward
 
                     player_direction = {
                         pygame.K_LEFT: "left",
@@ -240,7 +243,7 @@ if __name__ == '__main__':
         game.pygame_draw()
         clock.tick(speed)
 
-        if game_over == True:
+        if game_over:
             break
 
     print('Final Score', score)
