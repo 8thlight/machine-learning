@@ -16,7 +16,7 @@ jobs:
   include:
     - stage: style
       name: "Style check"
-      script: pylint **/*.py
+      script: make lint
     - stage: test
       name: "Unit tests"
       script: pytest -v --color=yes src # Runs in pipenv
