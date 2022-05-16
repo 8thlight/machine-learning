@@ -6,6 +6,7 @@ class MultiPlot:
     """
     MultiPlot receives images and creates a Matplotlib figure for them
     """
+
     def __init__(self):
         """Initialize variables images, names, cmaps and figure"""
         self.images = []

@@ -7,6 +7,7 @@ name = "pypi"
 tensorflow = "*"
 matplotlib = "*"
 autopep8 = "*"
+pygame = "*"
 
 [requires]
 python_version = "3.9"
