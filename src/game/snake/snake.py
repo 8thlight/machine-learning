@@ -1,20 +1,23 @@
+"""SnakeGame. It's interface is suitable for humans an AI programs'"""
+# pylint: disable=too-many-instance-attributes
 
 # Taken from
 # https://github.com/python-engineer/python-fun/blob/master/snake-pygame/snake_game.py
-import pygame
 import random
 from enum import Enum
 from collections import namedtuple
+import pygame
 
 
 class Direction(Enum):
+    """Direction enum used to know where the snake is heading towards"""
     RIGHT = 1
     LEFT = 2
     UP = 3
     DOWN = 4
 
 
-Point = namedtuple('Point', 'x, y')
+Point = namedtuple('Point', 'coordx, coordy')
 
 # rgb colors
 WHITE = (255, 255, 255)
@@ -24,39 +27,43 @@ BLACK = (0, 0, 0)
 
 
 class SnakeGame:
-    def __init__(self, w=640, h=480):
+    """Simple 2D snake game"""
+
+    def __init__(self, width=640, height=480):
+        """Initialize the graphic blocks and a snake of size 3 heading right"""
         self.block_size = 20
-        self.w = w
-        self.h = h
-        # init display
+        self.width = width
+        self.height = height
+
         self.display = None
+        self.font = None
 
-        # uhn  vars] cxa score
-
-        # init game state
         self.direction = Direction.RIGHT
 
-        self.head = Point(self.w / 2, self.h / 2)
+        self.head = Point(self.width / 2, self.height / 2)
         self.snake = [self.head,
-                      Point(self.head.x - self.block_size, self.head.y),
-                      Point(self.head.x - (2 * self.block_size), self.head.y)]
+                      Point(self.head.coordx - self.block_size,
+                            self.head.coordy),
+                      Point(self.head.coordx - (2 * self.block_size),
+                            self.head.coordy)]
 
         self.score = 0
         self.food = None
-        # self.steps_played = 0
         self._place_food()
 
     def _place_food(self):
+        """Place the food randomly in a non-colliding coordinate"""
         while True:
-            x = random.randint(0, (self.w - self.block_size) //
-                               self.block_size) * self.block_size
-            y = random.randint(0, (self.h - self.block_size) //
-                               self.block_size) * self.block_size
-            self.food = Point(x, y)
+            coordx = random.randint(0, (self.width - self.block_size) //
+                                    self.block_size) * self.block_size
+            coordy = random.randint(0, (self.height - self.block_size) //
+                                    self.block_size) * self.block_size
+            self.food = Point(coordx, coordy)
             if self.food not in self.snake:
                 break
 
     def _choose_direction(self, action):
+        """Rotate the snake given the provided `action` string"""
         clockwise = [Direction.UP, Direction.RIGHT,
                      Direction.DOWN, Direction.LEFT]
         current = clockwise.index(self.direction)
@@ -67,13 +74,14 @@ class SnakeGame:
             return clockwise[(current + 1) % 4]
         if action == "forward":
             return self.direction
-        else:
+
+        raise ValueError("Unknown action: " + str(action))
+
+    def play_step(self, action):
+        """Receive an action and execute its effects of moving and colliding"""
+        if action not in ["left", "right", "forward"]:
             raise ValueError("Unknown action: " + str(action))
 
-    # actions:
-    # "left", "right", "forward"
-    def play_step(self, action):
-        # self.steps_played += 1
         self.direction = self._choose_direction(action)
 
         # move
@@ -99,9 +107,11 @@ class SnakeGame:
         return eaten, self.score, game_over
 
     def is_collision(self, point):
+        """Returns true if the current state is a collision"""
         # hits boundary
-        if point.x > self.w - self.block_size or point.x < 0 or point.y > self.h - \
-                self.block_size or point.y < 0:
+        if point.coordx > self.width - self.block_size or \
+                point.coordy > self.height - self.block_size or \
+                point.coordx < 0 or point.coordy < 0:
             return True
         # hits itself
         if point in self.snake[1:]:
@@ -110,21 +120,22 @@ class SnakeGame:
         return False
 
     def pygame_draw(self):
+        """Uses pygame to draw the game in the screen"""
         if self.display is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), 25)
 
-            self.display = pygame.display.set_mode((self.w, self.h))
+            self.display = pygame.display.set_mode((self.width, self.height))
             pygame.display.set_caption('Snake')
 
         self.display.fill(BLACK)
 
-        for pt in self.snake:
+        for body_point in self.snake:
             pygame.draw.rect(
                 self.display,
                 GREEN,
                 pygame.Rect(
-                    pt.x,
-                    pt.y,
+                    body_point.coordx,
+                    body_point.coordy,
                     self.block_size,
                     self.block_size))
 
@@ -132,8 +143,8 @@ class SnakeGame:
             self.display,
             RED,
             pygame.Rect(
-                self.food.x,
-                self.food.y,
+                self.food.coordx,
+                self.food.coordy,
                 self.block_size,
                 self.block_size))
 
@@ -143,20 +154,22 @@ class SnakeGame:
         pygame.display.flip()
 
     def _move(self, direction):
-        x = self.head.x
-        y = self.head.y
+        """Adds a new head according to the given direction"""
+        coordx = self.head.coordx
+        coordy = self.head.coordy
         if direction == Direction.RIGHT:
-            x += self.block_size
+            coordx += self.block_size
         elif direction == Direction.LEFT:
-            x -= self.block_size
+            coordx -= self.block_size
         elif direction == Direction.DOWN:
-            y += self.block_size
+            coordy += self.block_size
         elif direction == Direction.UP:
-            y -= self.block_size
+            coordy -= self.block_size
 
-        self.head = Point(x, y)
+        self.head = Point(coordx, coordy)
 
     def quit(self):
+        """Quit display"""
         if self.display:
             pygame.quit()
 
@@ -164,6 +177,7 @@ class SnakeGame:
 
 
 def player_to_snake_perspective(snake_direction, player_direction):
+    """Transforms universal directions (player) to local directions (snake)"""
     if snake_direction == Direction.UP:
         return {
             'up': 'forward',
@@ -195,57 +209,3 @@ def player_to_snake_perspective(snake_direction, player_direction):
         'down': 'right',
         'right': 'forward'
     }[player_direction]
-
-
-if __name__ == '__main__':
-    pygame.init()
-
-    game = SnakeGame()
-
-    speed = 20
-    clock = pygame.time.Clock()
-    stop = False
-    # game loop
-    while True:
-        direction = game.direction
-
-        # 1. collect user input
-        action = "forward"
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game.quit()
-                stop = True
-
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    game.quit()
-                    stop = True
-
-                if event.key in [
-                        pygame.K_LEFT,
-                        pygame.K_RIGHT,
-                        pygame.K_UP,
-                        pygame.K_DOWN]:  # any other key keeps forward
-
-                    player_direction = {
-                        pygame.K_LEFT: "left",
-                        pygame.K_RIGHT: "right",
-                        pygame.K_UP: "up",
-                        pygame.K_DOWN: "down"
-                    }[event.key]
-
-                    action = player_to_snake_perspective(game.direction,
-                                                         player_direction)
-        if stop:
-            break
-
-        eaten, score, game_over = game.play_step(action)
-        game.pygame_draw()
-        clock.tick(speed)
-
-        if game_over:
-            break
-
-    print('Final Score', score)
-
-    pygame.quit()

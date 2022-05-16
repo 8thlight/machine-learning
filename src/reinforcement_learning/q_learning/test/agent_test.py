@@ -1,9 +1,14 @@
+"""Tests the agent.py file"""
+# pylint: disable=missing-function-docstring
 import pytest
 import tensorflow as tf
 import numpy as np
 
 from game.snake import Direction, SnakeGame, Point
-from ..agent import ai_direction_to_snake, Agent
+from ..agent import SnakeAgent, ai_direction_to_snake, snake_state_11, snake_reward
+from ..model import QTrainer, linear_qnet
+
+placeholder_trainer = QTrainer(linear_qnet(11, 5, 3))
 
 
 def test_ai_direction_left():
@@ -43,170 +48,36 @@ def test_ai_direction_cannot_receive_numpy_array():
 
 
 def test_reward_correct_parameters():
-    agent = Agent()
     with pytest.raises(ValueError) as e_info:
-        agent.reward(False, 0.56)
+        snake_reward(False, 0.56)
 
     assert str(e_info.value) == "Reward function only receives booleans"
 
     with pytest.raises(ValueError) as e_info:
-        agent.reward(0.42, True)
+        snake_reward(0.42, True)
 
     assert str(e_info.value) == "Reward function only receives booleans"
 
 
 def test_reward_on_done():
-    agent = Agent()
-    reward = agent.reward(False, True)
+    reward = snake_reward(False, True)
     assert reward == -10
 
 
 def test_reward_on_eaten():
-    agent = Agent()
-    reward = agent.reward(True, False)
+    reward = snake_reward(True, False)
     assert reward == 10
 
 
 def test_reward_on_default():
-    agent = Agent()
-    reward = agent.reward(False, False)
+    reward = snake_reward(False, False)
     assert reward == 0
 
 
-def test_state_directions():
-    agent = Agent()
-    game = SnakeGame()
-    indexes = [3, 4, 5, 6]
-    directions = [Direction.LEFT, Direction.RIGHT,
-                  Direction.UP, Direction.DOWN]
-
-    for idx, direction in zip(indexes, directions):
-        game.direction = direction
-        state = agent.get_state(game)
-        other_indexes = [i for i in indexes if i != idx]
-        assert state[idx] == 1
-        for other_idx in other_indexes:
-            assert state[other_idx] == 0
-
-
-def test_state_food_locations():
-    agent = Agent()
-    game = SnakeGame()
-    unit = game.block_size
-    x = game.head.x
-    y = game.head.y
-
-    # food is up
-    game.food = Point(x, y - unit)
-    state = agent.get_state(game)
-    assert (state[7:11] == [0, 0, 1, 0]).all()
-
-    # food is up-right
-    game.food = Point(x + unit, y - unit)
-    state = agent.get_state(game)
-    assert (state[7:11] == [0, 1, 1, 0]).all()
-
-    # food is right
-    game.food = Point(x + unit, y)
-    state = agent.get_state(game)
-    assert (state[7:11] == [0, 1, 0, 0]).all()
-
-    # food is down-right
-    game.food = Point(x + unit, y + unit)
-    state = agent.get_state(game)
-    assert (state[7:11] == [0, 1, 0, 1]).all()
-
-    # food is down
-    game.food = Point(x, y + unit)
-    state = agent.get_state(game)
-    assert (state[7:11] == [0, 0, 0, 1]).all()
-
-    # food is down-left
-    game.food = Point(x - unit, y + unit)
-    state = agent.get_state(game)
-    assert (state[7:11] == [1, 0, 0, 1]).all()
-
-    # food is left
-    game.food = Point(x - unit, y)
-    state = agent.get_state(game)
-    assert (state[7:11] == [1, 0, 0, 0]).all()
-
-    # food is up-left
-    game.food = Point(x - unit, y - unit)
-    state = agent.get_state(game)
-    assert (state[7:11] == [1, 0, 1, 0]).all()
-
-
-def test_state_danger_straight():
-    agent = Agent()
-    game = SnakeGame()
-    unit = game.block_size
-    x = game.head.x
-    y = game.head.y
-
-    directions = [Direction.UP, Direction.RIGHT,
-                  Direction.DOWN, Direction.LEFT]
-    tails = [Point(x, y - unit), Point(x + unit, y),
-             Point(x, y + unit), Point(x - unit, y)]
-
-    for direction, tail in zip(directions, tails):
-        game.direction = direction
-        game.snake = [game.head, tail]
-        state = agent.get_state(game)
-        assert (state[:3] == [1, 0, 0]).all()
-
-
-def test_state_danger_left():
-    agent = Agent()
-    game = SnakeGame()
-    unit = game.block_size
-    x = game.head.x
-    y = game.head.y
-
-    directions = [Direction.UP, Direction.RIGHT,
-                  Direction.DOWN, Direction.LEFT]
-    tails = [Point(x - unit, y), Point(x, y - unit),
-             Point(x + unit, y), Point(x, y + unit)]
-
-    for direction, tail in zip(directions, tails):
-        game.direction = direction
-        game.snake = [game.head, tail]
-        state = agent.get_state(game)
-        assert (state[:3] == [0, 0, 1]).all()
-
-
-def test_state_danger_right():
-    agent = Agent()
-    game = SnakeGame()
-    unit = game.block_size
-    x = game.head.x
-    y = game.head.y
-
-    directions = [Direction.UP, Direction.RIGHT,
-                  Direction.DOWN, Direction.LEFT]
-    tails = [Point(x + unit, y), Point(x, y + unit),
-             Point(x - unit, y), Point(x, y - unit)]
-
-    for direction, tail in zip(directions, tails):
-        game.direction = direction
-        game.snake = [game.head, tail]
-        state = agent.get_state(game)
-        assert (state[:3] == [0, 1, 0]).all()
-
-
-def test_get_state_shape():
-    agent = Agent()
-    game = SnakeGame()
-    state = agent.get_state(game)
-
-    assert isinstance(state, np.ndarray)
-    assert state.shape == (11,)
-
-
 def test_get_action_shape():
-    agent = Agent()
+    agent = SnakeAgent(placeholder_trainer)
     game = SnakeGame()
-    state = agent.get_state(game)
+    state = snake_state_11(game)
     action = agent.get_action(state)
 
     assert isinstance(action, list)
@@ -217,9 +88,131 @@ def test_get_action_shape():
 
 
 def test_defaults():
-    agent = Agent()
+    agent = SnakeAgent(placeholder_trainer)
 
     assert agent.n_games == 0
     assert agent.epsilon == 0
-    assert agent.gamma == 0.9
     assert agent.batch_size == 1000
+
+def test_get_state_shape():
+    game = SnakeGame()
+    state = snake_state_11(game)
+
+    assert isinstance(state, np.ndarray)
+    assert state.shape == (11,)
+
+
+def test_state_danger_right():
+    game = SnakeGame()
+    unit = game.block_size
+    coordx = game.head.coordx
+    coordy = game.head.coordy
+
+    directions = [Direction.UP, Direction.RIGHT,
+                  Direction.DOWN, Direction.LEFT]
+    tails = [Point(coordx + unit, coordy), Point(coordx, coordy + unit),
+             Point(coordx - unit, coordy), Point(coordx, coordy - unit)]
+
+    for direction, tail in zip(directions, tails):
+        game.direction = direction
+        game.snake = [game.head, tail]
+        state = snake_state_11(game)
+        assert (state[:3] == [0, 1, 0]).all()
+
+
+def test_state_danger_straight():
+    game = SnakeGame()
+    unit = game.block_size
+    coordx = game.head.coordx
+    coordy = game.head.coordy
+
+    directions = [Direction.UP, Direction.RIGHT,
+                  Direction.DOWN, Direction.LEFT]
+    tails = [Point(coordx, coordy - unit), Point(coordx + unit, coordy),
+             Point(coordx, coordy + unit), Point(coordx - unit, coordy)]
+
+    for direction, tail in zip(directions, tails):
+        game.direction = direction
+        game.snake = [game.head, tail]
+        state = snake_state_11(game)
+        assert (state[:3] == [1, 0, 0]).all()
+
+
+def test_state_danger_left():
+    game = SnakeGame()
+    unit = game.block_size
+    coordx = game.head.coordx
+    coordy = game.head.coordy
+
+    directions = [Direction.UP, Direction.RIGHT,
+                  Direction.DOWN, Direction.LEFT]
+    tails = [Point(coordx - unit, coordy), Point(coordx, coordy - unit),
+             Point(coordx + unit, coordy), Point(coordx, coordy + unit)]
+
+    for direction, tail in zip(directions, tails):
+        game.direction = direction
+        game.snake = [game.head, tail]
+        state = snake_state_11(game)
+        assert (state[:3] == [0, 0, 1]).all()
+
+
+def test_state_directions():
+    game = SnakeGame()
+    indexes = [3, 4, 5, 6]
+    directions = [Direction.LEFT, Direction.RIGHT,
+                  Direction.UP, Direction.DOWN]
+
+    for idx, direction in zip(indexes, directions):
+        game.direction = direction
+        state = snake_state_11(game)
+        other_indexes = [i for i in indexes if i != idx]
+        assert state[idx] == 1
+        for other_idx in other_indexes:
+            assert state[other_idx] == 0
+
+
+def test_state_food_locations():
+    game = SnakeGame()
+    unit = game.block_size
+    coordx = game.head.coordx
+    coordy = game.head.coordy
+
+    # food is up
+    game.food = Point(coordx, coordy - unit)
+    state = snake_state_11(game)
+    assert (state[7:11] == [0, 0, 1, 0]).all()
+
+    # food is up-right
+    game.food = Point(coordx + unit, coordy - unit)
+    state = snake_state_11(game)
+    assert (state[7:11] == [0, 1, 1, 0]).all()
+
+    # food is right
+    game.food = Point(coordx + unit, coordy)
+    state = snake_state_11(game)
+    assert (state[7:11] == [0, 1, 0, 0]).all()
+
+    # food is down-right
+    game.food = Point(coordx + unit, coordy + unit)
+    state = snake_state_11(game)
+    assert (state[7:11] == [0, 1, 0, 1]).all()
+
+    # food is down
+    game.food = Point(coordx, coordy + unit)
+    state = snake_state_11(game)
+    assert (state[7:11] == [0, 0, 0, 1]).all()
+
+    # food is down-left
+    game.food = Point(coordx - unit, coordy + unit)
+    state = snake_state_11(game)
+    assert (state[7:11] == [1, 0, 0, 1]).all()
+
+    # food is left
+    game.food = Point(coordx - unit, coordy)
+    state = snake_state_11(game)
+    assert (state[7:11] == [1, 0, 0, 0]).all()
+
+    # food is up-left
+    game.food = Point(coordx - unit, coordy - unit)
+    state = snake_state_11(game)
+    assert (state[7:11] == [1, 0, 1, 0]).all()

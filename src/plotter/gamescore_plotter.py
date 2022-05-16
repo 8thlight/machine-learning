@@ -1,9 +1,11 @@
+"""Plotter useful in games"""
 import matplotlib.pyplot as plt
 
 plt.ion()
 
 
 def gamescore_plotter(scores, mean_scores):
+    """Plots the scores and mean scores"""
     plt.clf()
     plt.title('Training...')
     plt.xlabel('Number of Games')
