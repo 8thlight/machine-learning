@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/8thlight/machine-learning.svg?branch=main)](https://app.travis-ci.com/8thlight/machine-learning)
+
 # Machine Learning
 Machine Learning tools, techniques, gists and projects.
 Some of this code is referenced in our Blog.
