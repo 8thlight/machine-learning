@@ -4,6 +4,8 @@
 Machine Learning tools, techniques, gists and projects.
 Some of this code is referenced in our Blog.
 
+![ezgif-3-53a018627a](https://user-images.githubusercontent.com/25442086/168663740-ea7ebc04-71fa-4800-a0ff-6eb5b389c5c7.gif)
+
 This repository uses `pipenv` as an environment manager.
 The base python version is `3.9`. 
 
