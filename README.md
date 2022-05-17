@@ -97,8 +97,8 @@ previously copied python interpreter path as its value and restart VSCode.
 1. Ensure you have written appropriate tests and they are passing.
 1. Ensure the code passes the style guide conventions.
 
-Update the `requirements.txt` file using the following command from the 
-main directory:
+If some dependencies were added, update the `Pipfile.lock` file
+using:
 ```bash
 make lock
 ```
