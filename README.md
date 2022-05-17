@@ -32,6 +32,16 @@ To activate this environment run
 make activate
 ```
 
+## Running examples
+Every file in the `cli/` folder is an independent example available through
+CLI commands. Use `python <file>.py --help` to see the available options
+for the given example.
+
+For example, try running the Snake Game:
+```shell
+.../cli > python play_snake.py
+```
+
 ## Tests
 Run the entire test suite with `pytest`.
 Use
