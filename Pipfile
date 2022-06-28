@@ -4,15 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-tensorflow = "*"
-matplotlib = "*"
-autopep8 = "*"
-pygame = "*"
+tensorflow = "~=2.8.1"
+matplotlib = "~=3.5.1"
+autopep8 = "~=1.6.0"
+pygame = "~=2.1.2"
 
 [requires]
 python_version = "3.9"
 
 [dev-packages]
-pylint = "*"
-pytest = "*"
-autopep8 = "*"
+pylint = "~=2.12.2"
+pytest = "~=7.0.1"
+autopep8 = "~=1.6.0"
