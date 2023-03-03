@@ -51,7 +51,7 @@ def buil_arg_parser():
         help="Maximum board width"
     )
     parser.add_argument(
-        "--max-height", metavar="300", type=int, default=300,
+        "--max-height", metavar="320", type=int, default=320,
         help="Maximum board height"
     )
     return parser
