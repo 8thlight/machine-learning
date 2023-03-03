@@ -6,7 +6,7 @@ before_install:
 
 install:
   - pip install pipenv
-  - pipenv install --dev
+  - make install
 
 stages:
   - style
