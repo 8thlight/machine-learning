@@ -131,5 +131,5 @@ dmypy.json
 *.DS_Store
 
 # Ignore until pip has multi-platform support
-./Pipfile
-./Pipfile.lock
+/Pipfile
+/Pipfile.lock
