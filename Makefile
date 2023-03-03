@@ -12,6 +12,14 @@ PY_FILES := src/ cli/
 
 init: activate packages install test
 
+platform_specific:
+	@echo "Checking platform"
+	PLATFORM=$$(pipenv --support | grep platform_machine | sed -n "s/.*_machine': '\(.*\)'.*/\1/p"); \
+	echo "Platform is $$PLATFORM"
+
+devvv: platform_specific
+	echo "My platform s $$PLATFORM"
+
 activate:
 	pipenv shell
 
@@ -30,10 +38,21 @@ lintfix-hard:
 pipfile: install
 
 install:
-	pipenv install --dev
+	@PLATFORM=$$(pipenv --support | grep platform_machine | sed -n "s/.*_machine': '\(.*\)'.*/\1/p"); \
+	cp platforms/$$PLATFORM/Pipfile Pipfile; \
+	cp platforms/$$PLATFORM/Pipfile.lock Pipfile.lock; \
+	echo "Installing for platform $$PLATFORM"; \
+	pipenv install --dev;
+
+mmm:
+	cp Pipfile platforms/arm64/Pipfile; \
 
 lock:
-	pipenv lock
+	@PLATFORM=$$(pipenv --support | grep platform_machine | sed -n "s/.*_machine': '\(.*\)'.*/\1/p"); \
+	pipenv lock; \
+	cp Pipfile platforms/$$PLATFORM/Pipfile; \
+	cp Pipfile.lock platforms/$$PLATFORM/Pipfile.lock; \
+	echo "Locking for platform $$PLATFORM";
 
 clean:
 	pipenv clean
