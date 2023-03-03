@@ -4,6 +4,11 @@ python:
 before_install:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)/src
 
+os: linux
+arch:
+  - amd64
+  - arm64
+
 install:
   - pip install pipenv
   - make install
