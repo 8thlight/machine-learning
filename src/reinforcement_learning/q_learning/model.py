@@ -45,7 +45,6 @@ class QTrainer():
         masks = actions
 
         with tf.GradientTape() as tape:
-            tape.watch(self.model.trainable_variables)
             # train the model on the states and updated Q-values
             q_values = self.model(states)  # similar to action_probs
 
