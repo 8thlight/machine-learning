@@ -32,6 +32,11 @@ To activate this environment run
 make activate
 ```
 
+To add this project's packages to the environment run
+```bash
+make packages
+```
+
 ## Running examples
 Every file in the `cli/` folder is an independent example available through
 CLI commands. Use `python <file>.py --help` to see the available options
