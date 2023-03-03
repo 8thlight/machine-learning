@@ -6,7 +6,6 @@ before_install:
 
 arch:
   - amd64
-  - arm64
 
 install:
   - pip install pipenv
