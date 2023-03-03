@@ -12,14 +12,6 @@ PY_FILES := src/ cli/
 
 init: activate packages install test
 
-platform_specific:
-	@echo "Checking platform"
-	PLATFORM=$$(pipenv --support | grep platform_machine | sed -n "s/.*_machine': '\(.*\)'.*/\1/p"); \
-	echo "Platform is $$PLATFORM"
-
-devvv: platform_specific
-	echo "My platform s $$PLATFORM"
-
 activate:
 	pipenv shell
 
