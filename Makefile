@@ -30,7 +30,7 @@ lintfix-hard:
 pipfile: install
 
 install:
-	@PLATFORM=$$(pipenv --support | grep platform_machine | sed -n "s/.*_machine': '\(.*\)'.*/\1/p") && \
+	@PLATFORM=$$(python platform_pipfile.py) && \
 	cp platforms/$$PLATFORM/Pipfile Pipfile && \
 	cp platforms/$$PLATFORM/Pipfile.lock Pipfile.lock && \
 	echo "Installing for platform $$PLATFORM" && \
@@ -40,7 +40,7 @@ mmm:
 	cp Pipfile platforms/arm64/Pipfile; \
 
 lock:
-	@PLATFORM=$$(pipenv --support | grep platform_machine | sed -n "s/.*_machine': '\(.*\)'.*/\1/p") && \
+	@PLATFORM=$$(python platform_pipfile.py) && \
 	pipenv lock && \
 	cp Pipfile platforms/$$PLATFORM/Pipfile && \
 	cp Pipfile.lock platforms/$$PLATFORM/Pipfile.lock && \

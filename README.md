@@ -38,7 +38,7 @@ make packages
 ```
 
 Install and lock packages always through `make`, as it will handle different platforms for you.
-If a new platform is not supported, please update the Makefile appropriately, or create a new platform directory if necessary. This should be a temporary fix, as Pipenv creates multi-platform Pipfile.lock [support](https://github.com/pypa/pipenv/issues/5130).
+If a new platform is not supported, please update the `platform_pipfile.py` appropriately, or create a new platform directory if necessary. This should be a temporary fix, as Pipenv creates multi-platform Pipfile.lock [support](https://github.com/pypa/pipenv/issues/5130).
 
 ## Running examples
 Every file in the `cli/` folder is an independent example available through
