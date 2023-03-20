@@ -30,23 +30,21 @@ class QTrainer():
         self.loss_object = keras.losses.MeanSquaredError()
 
 
+    @tf.function
     def train_step(self, states, actions, rewards, next_states, dones):
         """
         Updates the model's parameters by calculating their derivatives
         with respect to the loss function
         """
-        future_rewards = self.model.predict(next_states)
+        future_rewards = tf.reduce_max(self.model(next_states), axis=1)
         # Q value = reward + discount factor * expected future reward
-        updated_q_values = rewards + self.gamma * tf.reduce_max(
-            future_rewards, axis=1
-        )
+        updated_q_values = rewards + tf.math.multiply(self.gamma, future_rewards)
 
-        updated_q_values = updated_q_values * (1 - dones)
+        updated_q_values = tf.math.multiply(updated_q_values, (1 - dones))
 
         masks = actions
 
         with tf.GradientTape() as tape:
-            tape.watch(self.model.trainable_variables)
             # train the model on the states and updated Q-values
             q_values = self.model(states)  # similar to action_probs
 
@@ -56,7 +54,7 @@ class QTrainer():
             # calculate loss between new Q-value and old Q-value
             loss = self.loss_object(updated_q_values, q_action)
 
-            # Backpropagation
+        # Backpropagation
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(
             zip(grads, self.model.trainable_variables))

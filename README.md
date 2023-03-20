@@ -32,6 +32,18 @@ To activate this environment run
 make activate
 ```
 
+To add this project's packages to the environment run
+```bash
+make packages
+```
+
+Install and lock packages always through `make`, as it will handle different platforms for you.
+If a new platform is not supported, please update the `platform_pipfile.py` appropriately, or create a new platform directory if necessary. This should be a temporary fix, as Pipenv creates multi-platform Pipfile.lock [support](https://github.com/pypa/pipenv/issues/5130).
+
+To see graphs of ML models using `tf.keras.utils.plot_model`, you will also need [graphviz](https://graphviz.gitlab.io/download/).
+
+The `[packages]` and `[dev-packages]` sections of the Pipfiles correspond to dependencies imported in the code, and those used through the cli respectively.
+
 ## Running examples
 Every file in the `cli/` folder is an independent example available through
 CLI commands. Use `python <file>.py --help` to see the available options
