@@ -54,7 +54,7 @@ class QTrainer():
             # calculate loss between new Q-value and old Q-value
             loss = self.loss_object(updated_q_values, q_action)
 
-            # Backpropagation
+        # Backpropagation
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(
             zip(grads, self.model.trainable_variables))
